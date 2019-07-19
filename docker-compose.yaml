@@ -3,18 +3,25 @@ version: '3.1'
 services:
 
   wordpress:
-    image: wordpress
+    build: ./wordpress
+    image: wordpress:troop506
     restart: always
     ports:
-      - 8080:80
+      - 80
     env_file: 
         - private-environment.txt
     environment:
       WORDPRESS_DB_HOST: db
-      WORDPRESS_DB_USER: exampleuser
+      WORDPRESS_DB_USER: wordpressuser
       # In private-environment.txt
       #WORDPRESS_DB_PASSWORD: examplepass
-      WORDPRESS_DB_NAME: exampledb
+      WORDPRESS_DB_NAME: wpdb
+      
+      VIRTUAL_HOST: demo.lajollatroop506.com
+      #- LETSENCRYPT_HOST=redmine.civicknowledge.com 
+      #- LETSENCRYPT_EMAIL=eric@civicknowledge.com
+    volumes:
+        - html:/var/www/html
 
   db:
     image: mysql:5.7
@@ -22,9 +29,17 @@ services:
     env_file: 
         - private-environment.txt
     environment:
-      MYSQL_DATABASE: exampledb
-      MYSQL_USER: exampleuser
+      MYSQL_DATABASE: wpdb
+      MYSQL_USER: wordpressuser
       # In private-environment.txt
       #MYSQL_PASSWORD: examplepass
       MYSQL_RANDOM_ROOT_PASSWORD: '1'
 
+volumes:
+    html: 
+        
+networks:
+  default:
+    external:
+      name: webproxy
+      
