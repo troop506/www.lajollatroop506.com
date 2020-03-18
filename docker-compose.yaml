@@ -17,9 +17,9 @@ services:
       #WORDPRESS_DB_PASSWORD: examplepass
       WORDPRESS_DB_NAME: wpdb
       
-      VIRTUAL_HOST: demo.lajollatroop506.com
-      #- LETSENCRYPT_HOST=redmine.civicknowledge.com 
-      #- LETSENCRYPT_EMAIL=eric@civicknowledge.com
+      VIRTUAL_HOST: demo.lajollatroop506.com, dev.lajollatroop506.com 
+      #LETSENCRYPT_HOST: demo.lajollatroop506.com
+      #LETSENCRYPT_EMAIL: eric@civicknowledge.com
     volumes:
         - html:/var/www/html
 
