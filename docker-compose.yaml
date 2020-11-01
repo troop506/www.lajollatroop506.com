@@ -4,36 +4,50 @@ services:
 
   wordpress:
     build: ./wordpress
-    image: wordpress:troop506
     restart: always
     ports:
-      - 80
+      - "8080:80"
     env_file: 
-        - private-environment.txt
+        -  ../private-environment.txt
+
     environment:
-      WORDPRESS_DB_HOST: db
-      WORDPRESS_DB_USER: wordpressuser
-      # In private-environment.txt
-      #WORDPRESS_DB_PASSWORD: examplepass
-      WORDPRESS_DB_NAME: wpdb
-      
-      VIRTUAL_HOST: demo.lajollatroop506.com, dev.lajollatroop506.com 
-      #LETSENCRYPT_HOST: demo.lajollatroop506.com
-      #LETSENCRYPT_EMAIL: eric@civicknowledge.com
+      WORDPRESS_DB_HOST: mariadb
+      WORDPRESS_DB_NAME: questions
+      VIRTUAL_HOST: questions.sandiegodata.org
+      LETSENCRYPT_HOST: questions.sandiegodata.org
+      LETSENCRYPT_EMAIL: eric@civicknowledge.com
     volumes:
         - html:/var/www/html
 
-  db:
-    image: mysql:5.7
-    restart: always
-    env_file: 
-        - private-environment.txt
-    environment:
-      MYSQL_DATABASE: wpdb
-      MYSQL_USER: wordpressuser
+  #db:
+  # image: mysql:5.7
+  #  restart: always
+  #  env_file: 
+  #      - private-environment.txt
+  #  environment:
+  #    MYSQL_DATABASE: wpdb
+  #    MYSQL_USER: wordpressuser
       # In private-environment.txt
       #MYSQL_PASSWORD: examplepass
-      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+  #    MYSQL_RANDOM_ROOT_PASSWORD: '1'
+
+  #sshd:
+  #  build: ./sshd
+  #  restart: always
+  #  ports:
+  #    - "2222:22"
+  #  env_file: 
+  #      - private-environment.txt
+  #  environment:
+  #      SSH_ENABLE_ROOT: "true"
+  #      SSH_USERS: www:33:33
+        
+    volumes:
+        - html:/var/www/html
+        - ${HOME}/.ssh/id_rsa.pub:/root/.ssh/authorized_keys:ro
+        - ${HOME}/.ssh/id_rsa.pub:/etc/authorized_keys/www:ro
+        - ./keys/:/etc/ssh/keys 
+
 
 volumes:
     html: 
