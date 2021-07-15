@@ -4,12 +4,12 @@ services:
 
   wordpress:
     build: ./wordpress
-    image: wordpress:troop506
     restart: always
     ports:
-      - 80
+      - "8080:80"
     env_file: 
-        - private-environment.txt
+        -  ../private-environment.txt
+
     environment:
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_USER: wordpressuser
@@ -61,6 +61,7 @@ services:
     volumes:
         - var-lib-mysql:/var/lib/mysql
         - var-backups-mysql:/var/backups
+
 
 volumes:
     html: 

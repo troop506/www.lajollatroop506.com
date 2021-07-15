@@ -1,0 +1,3 @@
+[submodule "question2answer"]
+	path = question2answer
+	url = https://github.com/sandiegodata/question2answer.git
