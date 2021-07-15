@@ -17,11 +17,35 @@ services:
       #WORDPRESS_DB_PASSWORD: examplepass
       WORDPRESS_DB_NAME: wpdb
       
-      VIRTUAL_HOST: demo.lajollatroop506.com, dev.lajollatroop506.com 
+      VIRTUAL_HOST: demo.lajollatroop506.com, local.lajollatroop506.com
       #LETSENCRYPT_HOST: demo.lajollatroop506.com
       #LETSENCRYPT_EMAIL: eric@civicknowledge.com
     volumes:
         - html:/var/www/html
+
+
+  # Production wordpress
+  wordpress_prod:
+    build: ./wordpress
+    image: wordpress:troop506
+    restart: always
+    ports:
+      - 80
+    env_file: 
+        - private-environment.txt
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wordpressuser
+      # In private-environment.txt
+      #WORDPRESS_DB_PASSWORD: examplepass
+      WORDPRESS_DB_NAME: wpdb
+      WORDPRESS_TABLE_PREFIX: prod
+      
+      VIRTUAL_HOST: www.lajollatroop506.com
+      #LETSENCRYPT_HOST: demo.lajollatroop506.com
+      #LETSENCRYPT_EMAIL: eric@civicknowledge.com
+    volumes:
+        - html_prod:/var/www/html
 
   db:
     image: mysql:5.7
@@ -34,10 +58,17 @@ services:
       # In private-environment.txt
       #MYSQL_PASSWORD: examplepass
       MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    volumes:
+        - var-lib-mysql:/var/lib/mysql
+        - var-backups-mysql:/var/backups
 
 volumes:
     html: 
+    html_prod:
+    var-lib-mysql:
+    var-backups-mysql:
         
+      
 networks:
   default:
     external:
