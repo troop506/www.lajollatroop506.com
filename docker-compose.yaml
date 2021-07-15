@@ -2,28 +2,53 @@ version: '3.1'
 
 services:
 
-  wordpress:
+  wordpress_dev:
     build: ./wordpress
-    image: wordpress:troop506
+    image: wordpress:troop506-5.7-7.4
     restart: always
     ports:
       - 80
     env_file: 
         - private-environment.txt
     environment:
-      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_HOST: db_ljt506
+      WORDPRESS_DB_USER: wordpressuser
+      # In private-environment.txt
+      #WORDPRESS_DB_PASSWORD: examplepass
+      WORDPRESS_TABLE_PREFIX: dev
+      WORDPRESS_DB_NAME: wpdb
+      
+      VIRTUAL_HOST: dev.lajollatroop506.com, local.lajollatroop506.com
+      LETSENCRYPT_HOST: dev.lajollatroop506.com, local.lajollatroop506.com
+      LETSENCRYPT_EMAIL: eric@civicknowledge.com
+    volumes:
+        - html_dev:/var/www/html
+
+
+  # Production wordpress
+  wordpress_prod:
+    build: ./wordpress
+    image: wordpress:troop506-5.7-7.4
+    restart: always
+    ports:
+      - 80
+    env_file: 
+        - private-environment.txt
+    environment:
+      WORDPRESS_DB_HOST: db_ljt506
       WORDPRESS_DB_USER: wordpressuser
       # In private-environment.txt
       #WORDPRESS_DB_PASSWORD: examplepass
       WORDPRESS_DB_NAME: wpdb
+      WORDPRESS_TABLE_PREFIX: prod
       
-      VIRTUAL_HOST: demo.lajollatroop506.com, dev.lajollatroop506.com 
-      #LETSENCRYPT_HOST: demo.lajollatroop506.com
-      #LETSENCRYPT_EMAIL: eric@civicknowledge.com
+      VIRTUAL_HOST: www.lajollatroop506.com
+      LETSENCRYPT_HOST: www.lajollatroop506.com
+      LETSENCRYPT_EMAIL: eric@civicknowledge.com
     volumes:
-        - html:/var/www/html
+        - html_prod:/var/www/html
 
-  db:
+  db_ljt506:
     image: mysql:5.7
     restart: always
     env_file: 
@@ -33,11 +58,18 @@ services:
       MYSQL_USER: wordpressuser
       # In private-environment.txt
       #MYSQL_PASSWORD: examplepass
-      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+      MYSQL_RANDOM_ROOT_PASSWORD: '1' # 1 means 'yes'
+    volumes:
+        - var-lib-mysql:/var/lib/mysql
+        - var-backups-mysql:/var/backups
 
 volumes:
-    html: 
+    html_dev: 
+    html_prod:
+    var-lib-mysql:
+    var-backups-mysql:
         
+      
 networks:
   default:
     external:
