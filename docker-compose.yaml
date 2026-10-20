@@ -1,77 +1,68 @@
-version: '3.1'
+# Troop 506 WordPress — production stack.
+#
+# TLS and the public hostname are handled by the Caddy reverse proxy in front
+# of this host (see _infra/proxy.do.cnshost.net), which forwards to WP_PORT.
+# Settings and secrets live in .env (copy .env.example).
 
 services:
 
-  wordpress_dev:
-    build: ./wordpress
-    image: wordpress:troop506-5.7-7.4
-    restart: always
+  wordpress:
+    build:
+      context: ./wordpress
+      additional_contexts:
+        theme: ../troop506-theme
+    image: troop506-wordpress:latest
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
     ports:
-      - 80
-    env_file: 
-        - private-environment.txt
+      - "${WP_BIND:-127.0.0.1}:${WP_PORT:-8080}:80"
     environment:
-      WORDPRESS_DB_HOST: db_ljt506
-      WORDPRESS_DB_USER: wordpressuser
-      # In private-environment.txt
-      #WORDPRESS_DB_PASSWORD: examplepass
-      WORDPRESS_TABLE_PREFIX: dev
-      WORDPRESS_DB_NAME: wpdb
-      
-      VIRTUAL_HOST: dev.lajollatroop506.com, local.lajollatroop506.com
-      LETSENCRYPT_HOST: dev.lajollatroop506.com, local.lajollatroop506.com
-      LETSENCRYPT_EMAIL: eric@civicknowledge.com
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
+      WORDPRESS_TABLE_PREFIX: wp_
+      WORDPRESS_AUTH_KEY: ${WP_AUTH_KEY:?}
+      WORDPRESS_SECURE_AUTH_KEY: ${WP_SECURE_AUTH_KEY:?}
+      WORDPRESS_LOGGED_IN_KEY: ${WP_LOGGED_IN_KEY:?}
+      WORDPRESS_NONCE_KEY: ${WP_NONCE_KEY:?}
+      WORDPRESS_AUTH_SALT: ${WP_AUTH_SALT:?}
+      WORDPRESS_SECURE_AUTH_SALT: ${WP_SECURE_AUTH_SALT:?}
+      WORDPRESS_LOGGED_IN_SALT: ${WP_LOGGED_IN_SALT:?}
+      WORDPRESS_NONCE_SALT: ${WP_NONCE_SALT:?}
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_HOME', '${SITE_URL:-https://www.lajollatroop506.com}');
+        define('WP_SITEURL', '${SITE_URL:-https://www.lajollatroop506.com}');
+        define('DISALLOW_FILE_MODS', true);
+        define('DISALLOW_FILE_EDIT', true);
+        define('WP_AUTO_UPDATE_CORE', false);
+        define('WP_ENVIRONMENT_TYPE', '${WP_ENVIRONMENT_TYPE:-production}');
+    # Healthy once the entrypoint has copied core and written wp-config.php.
+    healthcheck:
+      test: ["CMD", "test", "-f", "/var/www/html/wp-config.php"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
     volumes:
-        - html_dev:/var/www/html
+      - ./data/uploads:/var/www/html/wp-content/uploads
 
-
-  # Production wordpress
-  wordpress_prod:
-    build: ./wordpress
-    image: wordpress:troop506-5.7-7.4
-    restart: always
-    ports:
-      - 80
-    env_file: 
-        - private-environment.txt
+  db:
+    image: mariadb:11.4
+    restart: unless-stopped
     environment:
-      WORDPRESS_DB_HOST: db_ljt506
-      WORDPRESS_DB_USER: wordpressuser
-      # In private-environment.txt
-      #WORDPRESS_DB_PASSWORD: examplepass
-      WORDPRESS_DB_NAME: wpdb
-      WORDPRESS_TABLE_PREFIX: prod
-      
-      VIRTUAL_HOST: www.lajollatroop506.com
-      LETSENCRYPT_HOST: www.lajollatroop506.com
-      LETSENCRYPT_EMAIL: eric@civicknowledge.com
+      MARIADB_DATABASE: wordpress
+      MARIADB_USER: wordpress
+      MARIADB_PASSWORD: ${DB_PASSWORD:?}
+      MARIADB_RANDOM_ROOT_PASSWORD: "1"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
     volumes:
-        - html_prod:/var/www/html
-
-  db_ljt506:
-    image: mysql:5.7
-    restart: always
-    env_file: 
-        - private-environment.txt
-    environment:
-      MYSQL_DATABASE: wpdb
-      MYSQL_USER: wordpressuser
-      # In private-environment.txt
-      #MYSQL_PASSWORD: examplepass
-      MYSQL_RANDOM_ROOT_PASSWORD: '1' # 1 means 'yes'
-    volumes:
-        - var-lib-mysql:/var/lib/mysql
-        - var-backups-mysql:/var/backups
+      - db:/var/lib/mysql
 
 volumes:
-    html_dev: 
-    html_prod:
-    var-lib-mysql:
-    var-backups-mysql:
-        
-      
-networks:
-  default:
-    external:
-      name: webproxy
-      
+  db:
