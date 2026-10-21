@@ -20,6 +20,13 @@ minute or two.
 | Categories | `content/categories/<slug>/_index.md` |
 | Media | `uploads/`, served at `/wp-content/uploads/` like WordPress |
 
+"Sign In with GitHub" goes through a small OAuth service: a Cloudflare Worker
+deployed from [troop506/sveltia-cms-auth](https://github.com/troop506/sveltia-cms-auth)
+(a fork of Sveltia's authenticator) under the Cloudflare account
+eric@busboom.org (Google sign-in). Its URL is `backend.base_url` in
+[static/admin/config.yml](static/admin/config.yml); see [AGENTS.md](AGENTS.md).
+"Sign In Using Access Token" works without it.
+
 New posts start as drafts. In the story editor, **Photo**, **Photo row** and
 **YouTube video** insert the `image`, `photo-row` and `embed` shortcodes
 (`layouts/_shortcodes/`); [static/admin/index.html](static/admin/index.html)

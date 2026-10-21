@@ -6,6 +6,8 @@ backend:
   name: github
   repo: troop506/www.lajollatroop506.com
   branch: master
+  # OAuth client for "Sign In with GitHub"; see AGENTS.md.
+  base_url: https://sveltia-cms-auth.holy-snow-2c62.workers.dev
 
 site_url: https://www.lajollatroop506.com
 display_url: https://www.lajollatroop506.com
