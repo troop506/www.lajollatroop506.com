@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Troop 506 Site Editor</title>
+</head>
+<body>
+  <!-- Sveltia CMS. Configuration: config.yml next to this file. -->
+  <script src="https://unpkg.com/@sveltia/cms@0.230.0/dist/sveltia-cms.js"></script>
+  <script>
+    // Editor blocks for the Hugo shortcodes in layouts/_shortcodes/.
+
+    // Read the attributes of a shortcode like {{< image src="a" alt="b" >}}.
+    const attrs = (text) => Object.fromEntries(
+      [...text.matchAll(/(\w+)="([^"]*)"/g)].map(([, k, v]) => [k, v.replaceAll('&quot;', '"')]),
+    );
+    // Write them back, leaving out empty ones.
+    const shortcode = (name, values, keys) => '{{< ' + name + ' ' + keys
+      .filter((k) => values[k] !== undefined && values[k] !== null && !['', 'none'].includes(`${values[k]}`))
+      .map((k) => `${k}="${`${values[k]}`.replaceAll('"', '&quot;')}"`)
+      .join(' ') + ' >}}';
+    const esc = (s = '') => `${s}`.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+
+    const IMAGE_KEYS = ['src', 'alt', 'caption', 'align', 'resized', 'size', 'link', 'width', 'height', 'kind', 'block', 'wrapper'];
+    const IMAGE_FIELDS = [
+      { name: 'src', label: 'Photo', widget: 'image' },
+      { name: 'alt', label: 'Description (for screen readers)', required: false },
+      { name: 'caption', label: 'Caption', required: false },
+      {
+        name: 'align', label: 'Alignment', widget: 'select', required: false, default: 'none',
+        options: [{ label: 'Normal', value: 'none' }, { label: 'Center', value: 'center' },
+          { label: 'Float left', value: 'left' }, { label: 'Float right', value: 'right' }],
+      },
+      { name: 'resized', label: 'Display width in pixels (optional)', widget: 'number', required: false },
+      // Kept as they were in WordPress; not edited here.
+      { name: 'size', widget: 'hidden' }, { name: 'link', widget: 'hidden' },
+      { name: 'width', widget: 'hidden' }, { name: 'height', widget: 'hidden' },
+      { name: 'kind', widget: 'hidden' }, { name: 'block', widget: 'hidden' },
+      { name: 'wrapper', widget: 'hidden' },
+    ];
+
+    CMS.registerEditorComponent({
+      id: 'photo',
+      label: 'Photo',
+      icon: 'add_photo_alternate',
+      trigger: 'button',
+      fields: IMAGE_FIELDS,
+      pattern: /^{{< image ([^\n]*?) >}}$/m,
+      fromBlock: (m) => attrs(m[1]),
+      toBlock: (v) => (v.src ? shortcode('image', v, IMAGE_KEYS) : ''),
+      toPreview: ({ src = '', alt = '', caption = '' }) =>
+        `<figure><img src="${esc(src)}" alt="${esc(alt)}" style="max-width:100%">` +
+        (caption ? `<figcaption>${esc(caption)}</figcaption>` : '') + '</figure>',
+    });
+
+    CMS.registerEditorComponent({
+      id: 'photo-row',
+      label: 'Photo row (side by side)',
+      icon: 'view_column',
+      fields: [{
+        name: 'photos', label: 'Photos', widget: 'list', summary: '{{fields.src}}',
+        fields: IMAGE_FIELDS.filter((f) => f.name !== 'align' && f.name !== 'resized'),
+      }],
+      pattern: /^{{< photo-row >}}\n([\s\S]*?)\n{{< \/photo-row >}}$/m,
+      fromBlock: (m) => ({ photos: [...m[1].matchAll(/{{< image ([^\n]*?) >}}/g)].map((x) => attrs(x[1])) }),
+      toBlock: ({ photos = [] }) => ['{{< photo-row >}}',
+        ...photos.filter((p) => p.src).map((p) => shortcode('image', p, IMAGE_KEYS)),
+        '{{< /photo-row >}}'].join('\n'),
+      toPreview: ({ photos = [] }) => '<div style="display:flex;gap:1em">' + photos
+        .map((p) => `<img src="${esc(p.src)}" alt="${esc(p.alt)}" style="flex:1;min-width:0;object-fit:contain">`)
+        .join('') + '</div>',
+    });
+
+    CMS.registerEditorComponent({
+      id: 'youtube',
+      label: 'YouTube video',
+      icon: 'smart_display',
+      fields: [{ name: 'url', label: 'YouTube link' }, { name: 'title', label: 'Title', required: false }],
+      pattern: /^{{< embed ([^\n]*?) >}}$/m,
+      fromBlock: (m) => attrs(m[1]),
+      toBlock: (v) => (v.url ? shortcode('embed', v, ['url', 'title']) : ''),
+      toPreview: ({ url = '' }) => `<p>▶ YouTube: ${esc(url)}</p>`,
+    });
+  </script>
+</body>
+</html>

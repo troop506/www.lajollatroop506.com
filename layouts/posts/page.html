@@ -1,0 +1,14 @@
+{{ define "main" }}
+	<div id="page-content">
+		<div id="content-wide">
+			<section>
+
+{{ partial "entry.html" (dict "page" . "heading" "h1") }}
+
+			</section>
+		</div> <!-- End content-wide -->
+
+{{ partial "sidebar.html" . }}
+
+ 	</div> <!-- End page-content -->
+{{ end }}

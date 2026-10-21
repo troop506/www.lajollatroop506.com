@@ -1,0 +1,5 @@
+---
+title: Camping
+slug: camping
+---
+

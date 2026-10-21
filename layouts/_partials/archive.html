@@ -1,0 +1,25 @@
+{{- /* Month and year archives (archive.php); pages come from content/_content.gotmpl. */ -}}
+
+{{- $key := printf "%d" .Params.year -}}
+{{- $fmt := "2006" -}}
+{{- with .Params.month }}{{ $key = printf "%d-%02d" $.Params.year . }}{{ $fmt = "2006-01" }}{{ end -}}
+{{- $posts := slice -}}
+{{- range (where site.RegularPages "Section" "posts").ByDate.Reverse -}}
+  {{- if eq (.Date.Format $fmt) $key }}{{ $posts = $posts | append . }}{{ end -}}
+{{- end -}}
+	<div id="page-content">
+		<div id="content-wide">
+
+				<h1 class="page-title">
+				  Archives
+				</h1>
+
+{{ range first site.Params.postsPerPage $posts }}
+{{ partial "entry.html" (dict "page" . "heading" "h2") }}
+{{ end }}
+
+		</div> <!-- End content-wide -->
+
+{{ partial "sidebar.html" . }}
+
+ 	</div> <!-- End page-content -->

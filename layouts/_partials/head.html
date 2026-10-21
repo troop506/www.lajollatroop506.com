@@ -1,0 +1,40 @@
+{{- /* Stylesheets load in the order WordPress printed them. */ -}}
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+	<title>{{ partial "title.html" . }}{{ site.Title }} | {{ site.Params.description }}</title>
+	<link rel="stylesheet" href='//fonts.googleapis.com/css?family=Marcellus&subset=latin-ext,latin' />
+	<meta name='robots' content='max-image-preview:large' />
+	<link rel="alternate" type="application/rss+xml" title="{{ site.Title }} &raquo; Feed" href="{{ "feed/" | relURL }}" />
+{{- if .IsHome }}
+	<link rel='stylesheet' href='{{ "wp-content/plugins/kadence-blocks/includes/assets/css/kadence-splide.min.css" | relURL }}' media='all' />
+	<link rel='stylesheet' href='{{ "wp-content/plugins/kadence-blocks/includes/assets/css/kb-blocks-splide.min.css" | relURL }}' media='all' />
+{{- end }}
+	<link rel='stylesheet' href='{{ "wp-content/css/wp-before.css" | relURL }}' media='all' />
+{{- /* WordPress loaded Spectra's styles on single posts, pages and date
+     archives, but not on tag or category pages. */}}
+{{- $spectra := or (and .IsPage (in (slice "posts" "pages") .Section)) .Params.archive }}
+{{- if $spectra }}
+	<link rel='stylesheet' href='{{ "wp-content/uploads/uag-plugin/custom-style-blocks.css" | relURL }}' media='all' />
+{{- end }}
+	<link rel='stylesheet' href='{{ "wp-content/themes/troop506-theme/style.css" | relURL }}' media='all' />
+{{- if .IsHome }}
+	<link rel='stylesheet' href='{{ "wp-content/plugins/kadence-blocks/dist/style-blocks-rowlayout.css" | relURL }}' media='all' />
+	<link rel='stylesheet' href='{{ "wp-content/plugins/kadence-blocks/dist/style-blocks-column.css" | relURL }}' media='all' />
+	<link rel='stylesheet' href='{{ "wp-content/plugins/kadence-blocks/dist/style-blocks-advancedgallery.css" | relURL }}' media='all' />
+	<link rel='stylesheet' href='{{ "wp-content/plugins/kadence-blocks/dist/style-blocks-posts.css" | relURL }}' media='all' />
+{{- end }}
+	<link rel='stylesheet' href='{{ "wp-content/css/wp-after.css" | relURL }}' media='all' />
+{{- if $spectra }}
+	<link rel='stylesheet' href='{{ "wp-content/css/uagb-blocks.css" | relURL }}' media='all' />
+{{- end }}
+{{- if .IsHome }}
+	<link rel='stylesheet' href='{{ "wp-content/css/home.css" | relURL }}' media='all' />
+{{- end }}
+	<script src="{{ "wp-includes/js/jquery/jquery.min.js" | relURL }}"></script>
+	<script src="{{ "wp-includes/js/jquery/jquery-migrate.min.js" | relURL }}"></script>
+	<script src="{{ "wp-content/themes/troop506-theme/js/jquery.flexnav.min.js" | relURL }}"></script>
+	<script src="{{ "wp-content/themes/troop506-theme/js/jquery.hoverIntent.minified.js" | relURL }}"></script>
+{{- with .Permalink }}
+	<link rel="canonical" href="{{ . }}" />
+{{- end }}

@@ -1,0 +1,26 @@
+<header id="page-header">
+<div id="charter-box">{{ site.Params.description }}</div>
+<a href="{{ "/" | relURL }}" title="{{ site.Title }}"
+rel="home"><img id="mobile-logo" src="{{ "wp-content/themes/troop506-theme/images/Universal_Emblem_tiny.gif" | relURL }}" alt="B.S.A.
+Fleur De Lis" /><img id="fleurdelis" src="{{ "wp-content/themes/troop506-theme/images/Universal_Emblem_bar.png" | relURL }}" alt="B.S.A.
+Fleur De Lis" /><img id="brand" src="{{ "wp-content/themes/troop506-theme/images/bsa_brand.png" | relURL }}" alt="Boy Scouts of America (R)"/></a>
+<span id="site-name"><a href="{{ "/" | relURL }}" title="{{ site.Title }}"
+rel="home">{{ site.Title }}</a></span>
+</header>
+<div  id="main-navigation">
+	<div class="menu-button">Menu</div>
+		<nav class="menu-header-menu-container"><ul data-breakpoint="767" id="menu-header-menu" class="flexnav">
+{{- range site.Data.menu.items }}
+{{- $url := cond (hasPrefix .url "/") (relURL (strings.TrimPrefix "/" .url)) .url }}
+<li class="menu-item{{ with .children }} menu-item-has-children{{ end }}"><a href="{{ $url }}">{{ .title }}</a>
+{{- with .children }}
+<ul class="sub-menu">
+{{- range . }}
+{{- $url := cond (hasPrefix .url "/") (relURL (strings.TrimPrefix "/" .url)) .url }}
+	<li class="menu-item"><a href="{{ $url }}">{{ .title }}</a></li>
+{{- end }}
+</ul>
+{{- end }}
+</li>
+{{- end }}
+</ul></nav></div>

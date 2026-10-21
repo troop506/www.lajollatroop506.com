@@ -1,0 +1,14 @@
+{{- /* A Markdown image on its own line becomes a WordPress image block;
+     one inside a paragraph stays a plain <img>. */ -}}
+{{- $src := .Destination -}}
+{{- $res := "" -}}
+{{- if hasPrefix $src "/" }}{{ $res = resources.Get (strings.TrimPrefix "/" $src) }}{{ else if not (strings.Contains $src "://") }}{{ $res = .Page.Resources.Get $src }}{{ end -}}
+{{- $url := cond (hasPrefix $src "/") (relURL (strings.TrimPrefix "/" $src)) $src -}}
+{{- $dims := "" -}}
+{{- with $res }}{{ $url = .RelPermalink }}{{ if in (slice "jpeg" "png" "webp" "gif") .MediaType.SubType }}{{ $dims = printf ` width="%d" height="%d"` .Width .Height }}{{ end }}{{ end -}}
+{{- $img := printf `<img src="%s" alt="%s"%s/>` $url .PlainText $dims -}}
+{{- if .IsBlock -}}
+<figure class="wp-block-image size-large">{{ $img | safeHTML }}{{ with .Title }}<figcaption class="wp-element-caption">{{ . }}</figcaption>{{ end }}</figure>
+{{- else -}}
+{{ $img | safeHTML }}
+{{- end -}}

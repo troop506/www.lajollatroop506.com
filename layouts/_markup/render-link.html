@@ -1,0 +1,5 @@
+{{- /* Site-relative links work under any base path (e.g. GitHub Pages preview). */ -}}
+{{- $href := .Destination -}}
+{{- if and (hasPrefix $href "/") (not (hasPrefix $href "//")) }}{{ $href = relURL (strings.TrimPrefix "/" $href) }}{{ end -}}
+<a href="{{ $href | safeURL }}"{{ with .Title }} title="{{ . }}"{{ end }}>{{ .Text }}</a>
+{{- /**/ -}}

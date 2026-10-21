@@ -1,0 +1,10 @@
+{{- /* The part of <title> before the site name, as wp_title( '|' ) printed it.
+     WordPress printed nothing there for year archives. */ -}}
+{{- if .IsHome -}}
+{{- else if .Params.archive -}}
+  {{- with .Params.month }}{{ (time (printf "%d-%02d-01" $.Params.year .)).Format "January" }} | {{ $.Params.year }} | {{ end -}}
+{{- else if .Params.search -}}
+  Search Results | {{/* */ -}}
+{{- else if .Title -}}
+  {{ .Title }} | {{/* */ -}}
+{{- end -}}

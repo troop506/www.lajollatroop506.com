@@ -1,0 +1,35 @@
+{{- /* Year and month archive pages (/2025/, /2025/04/), as WordPress had.
+     Built from the dates of the published posts in content/posts. */ -}}
+{{- $months := dict -}}
+{{- range os.ReadDir "content/posts" -}}
+  {{- if and (strings.HasSuffix .Name ".md") (ne .Name "_index.md") -}}
+    {{- $src := os.ReadFile (printf "content/posts/%s" .Name) -}}
+    {{- if not (findRE `(?m)^draft:\s*true` $src) -}}
+      {{- with findRESubmatch `(?m)^date:\s*['"]?(\d{4})-(\d{2})` $src 1 -}}
+        {{- $y := index (index . 0) 1 -}}
+        {{- $m := index (index . 0) 2 -}}
+        {{- $months = merge $months (dict (printf "%s/%s" $y $m) (slice $y $m)) -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- $years := dict -}}
+{{- range $path, $ym := $months -}}
+  {{- $y := index $ym 0 -}}
+  {{- $m := index $ym 1 -}}
+  {{- $years = merge $years (dict $y true) -}}
+  {{- $.AddPage (dict
+      "path" $path
+      "kind" "page"
+      "title" "Archives"
+      "params" (dict "archive" true "year" (int $y) "month" (int (strings.TrimLeft "0" $m)))
+  ) -}}
+{{- end -}}
+{{- range $y, $_ := $years -}}
+  {{- $.AddPage (dict
+      "path" $y
+      "kind" "section"
+      "title" "Archives"
+      "params" (dict "archive" true "year" (int $y))
+  ) -}}
+{{- end -}}

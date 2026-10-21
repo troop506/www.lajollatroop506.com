@@ -1,0 +1,41 @@
+{{- /* The "First Sidebar" widgets: search, recent posts, archives, categories. */ -}}
+{{- $posts := where site.RegularPages "Section" "posts" -}}
+		<aside>
+		<section>
+			<article>
+	<div id="secondary" class="sidebar-container" role="complementary">
+		<div class="sidebar-inner">
+			<div class="widget-area">
+				<div id="search-2" class="widget-container widget_search">{{ partial "search-form.html" . }}</div>
+		<div id="recent-posts-2" class="widget-container widget_recent_entries">
+		<h3 class="widget-title">Recent Posts</h3>
+		<ul>
+{{- range first 5 $posts.ByDate.Reverse }}
+					<li>
+					<a href="{{ .RelPermalink }}"{{ if eq .RelPermalink $.RelPermalink }} aria-current="page"{{ end }}>{{ .Title }}</a>
+									</li>
+{{- end }}
+					</ul>
+
+		</div><div id="archives-2" class="widget-container widget_archive"><h3 class="widget-title">Archives</h3>
+			<ul>
+{{- range $posts.GroupByDate "2006-01" }}
+	<li><a href='{{ printf "%s/" (replace .Key "-" "/") | relURL }}'>{{ (index .Pages 0).Date.Format "January 2006" }}</a></li>
+{{- end }}
+			</ul>
+
+			</div><div id="categories-2" class="widget-container widget_categories"><h3 class="widget-title">Categories</h3>
+			<ul>
+{{- $cats := slice }}{{ range $name, $_ := site.Taxonomies.categories }}{{ with site.GetPage (printf "/categories/%s" $name) }}{{ $cats = $cats | append . }}{{ end }}{{ end }}
+{{- range sort $cats "Title" }}
+	<li class="cat-item"><a href="{{ .RelPermalink }}">{{ .Title }}</a>
+</li>
+{{- end }}
+			</ul>
+
+			</div>			</div><!-- .widget-area -->
+		</div><!-- .sidebar-inner -->
+	</div><!-- #secondary -->
+			</article>
+		</section>
+		</aside>

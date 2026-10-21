@@ -1,0 +1,6 @@
+{{- /* One column inside {{% columns %}}; optional width="40%". */ -}}
+<div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow"{{ with .Get "width" }} style="flex-basis:{{ . }}"{{ end }}>
+
+{{ .Inner }}
+
+</div>

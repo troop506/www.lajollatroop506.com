@@ -1,0 +1,37 @@
+{{- /* A post in the home page's Kadence posts grid. */ -}}
+{{- $words := findRE `\S+` .Plain -}}
+{{- $excerpt := delimit (first 55 $words) " " -}}
+{{- if gt (len $words) 55 }}{{ $excerpt = printf "%s […]" $excerpt }}{{ end -}}
+<li class="kb-post-list-item">
+<article class="entry content-bg loop-entry post type-post status-publish format-standard{{ with .Params.image }} has-post-thumbnail{{ end }} hentry{{ range .Params.categories }} category-{{ urlize . }}{{ end }}">
+{{- with .Params.image }}{{ with partial "resized.html" (dict "src" . "box" "768x0") }}
+<a aria-hidden="true" aria-label="{{ $.Title }}" class="post-thumbnail kadence-thumbnail-ratio-2-3" href="{{ $.RelPermalink }}" role="presentation" tabindex="-1">
+<div class="post-thumbnail-inner">
+<img alt="{{ $.Params.image_alt }}" class="attachment-medium_large size-medium_large wp-post-image" decoding="async" height="{{ .Height }}" loading="lazy" src="{{ .RelPermalink }}" width="{{ .Width }}"/> </div>
+</a><!-- .post-thumbnail -->
+{{- end }}{{ end }}
+<div class="entry-content-wrap">
+<header class="entry-header">
+<div class="entry-taxonomies">
+<span class="category-links term-links category-style-normal">
+{{ range $i, $c := .GetTerms "categories" }}{{ if $i }} | {{ end }}<a href="{{ $c.RelPermalink }}" rel="category tag">{{ $c.Title }}</a>{{ end }} </span>
+</div><!-- .entry-taxonomies -->
+<h2 class="entry-title"><a href="{{ .RelPermalink }}" rel="bookmark">{{ .Title }}</a></h2> <div class="entry-meta entry-meta-divider-dot">
+<span class="posted-by"><span class="meta-label">By</span><span class="author vcard"><span class="fn n">{{ .Params.author }}</span></span></span> <span class="posted-on">
+<time class="entry-date published" datetime="{{ .Date.Format "2006-01-02T15:04:05-07:00" }}">{{ .Date.Format site.Params.dateFormat }}</time><time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05-07:00" }}">{{ .Lastmod.Format site.Params.dateFormat }}</time> </span>
+</div><!-- .entry-meta -->
+</header><!-- .entry-header -->
+<div class="entry-summary">
+<p>{{ $excerpt }}</p>
+</div><!-- .entry-summary -->
+<footer class="entry-footer">
+<div class="entry-actions">
+<p class="more-link-wrap">
+<a class="post-more-link" href="{{ .RelPermalink }}">
+					Read More<span class="screen-reader-text"> {{ .Title }}</span><span class="kadence-svg-iconset svg-baseline"><svg aria-hidden="true" class="kadence-svg-icon kadence-arrow-right-alt-svg" fill="currentColor" height="28" version="1.1" viewbox="0 0 27 28" width="27" xmlns="http://www.w3.org/2000/svg"><title>Continue</title><path d="M27 13.953c0 0.141-0.063 0.281-0.156 0.375l-6 5.531c-0.156 0.141-0.359 0.172-0.547 0.094-0.172-0.078-0.297-0.25-0.297-0.453v-3.5h-19.5c-0.281 0-0.5-0.219-0.5-0.5v-3c0-0.281 0.219-0.5 0.5-0.5h19.5v-3.5c0-0.203 0.109-0.375 0.297-0.453s0.391-0.047 0.547 0.078l6 5.469c0.094 0.094 0.156 0.219 0.156 0.359v0z"></path>
+</svg></span> </a>
+</p>
+</div><!-- .entry-actions -->
+</footer><!-- .entry-footer --> </div>
+</article>
+</li>

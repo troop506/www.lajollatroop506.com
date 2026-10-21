@@ -1,0 +1,33 @@
+	<footer>
+		<div class="footer-third">
+			{{ partial "search-form.html" . }}					</div>
+
+		<div class="footer-third">
+			&nbsp;
+
+		</div>
+
+		<div class="footer-third">
+			<img id="footer-prepared" src="{{ "wp-content/themes/troop506-theme/images/prepared_standard_rev.gif" | relURL }}" alt="Do Your Best!">
+
+		</div>
+
+		<div class="clear-both"></div>
+	</footer>
+	<div id="credit-left">
+		<div class="no-mobile">
+			&copy; {{ now.Year }} {{ site.Title }} - <a href="http://www.scouting.org/">Boy Scouts of America</a> | <a href="{{ "admin/" | relURL }}"><span class="no-mobile">WordPress </span>Admin</a>
+		</div>
+		<div class="mobile-only">
+			&copy; {{ now.Year }} {{ site.Title }} - <a href="http://www.scouting.org/">Boy Scouts of America</a><br /><a href="{{ "admin/" | relURL }}"><span class="no-mobile">WordPress </span>Admin</a>
+		</div>
+	</div>
+
+	<div id="credit">
+		<div class="no-mobile">
+			 <a href="http://www.handsomeweb.com/scouts/">Get this WordPress theme for your troop.</a>
+		</div>
+		<div class="mobile-only">
+			<a href="http://www.handsomeweb.com/scouts/">Get this WordPress theme for your troop.</a>
+		</div>
+	</div>

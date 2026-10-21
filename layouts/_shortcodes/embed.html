@@ -1,0 +1,8 @@
+{{- /* A YouTube video, in WordPress's embed markup.
+  {{< embed url="https://www.youtube.com/watch?v=ID" >}} (any YouTube link form works) */ -}}
+{{- $url := .Get "url" -}}
+{{- $id := "" -}}
+{{- with findRESubmatch `(?:youtu\.be/|youtube\.com/(?:embed/|shorts/|watch\?(?:.*&)?v=))([\w-]{11})` $url 1 }}{{ $id = index (index . 0) 1 }}{{ end -}}
+<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe title="{{ .Get "title" }}" width="900" height="506" src="https://www.youtube.com/embed/{{ $id }}?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div></figure>

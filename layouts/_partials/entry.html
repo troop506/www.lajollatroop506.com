@@ -1,0 +1,27 @@
+{{- /* One post, as the theme's content.php printed it. Context: dict "page" "heading" (h1|h2). */ -}}
+{{- $p := .page -}}
+{{- $classes := slice "post" "type-post" "status-publish" "format-standard" -}}
+{{- with $p.Params.image }}{{ $classes = $classes | append "has-post-thumbnail" }}{{ end -}}
+{{- $classes = $classes | append "hentry" -}}
+{{- range $p.Params.categories }}{{ $classes = $classes | append (printf "category-%s" (urlize .)) }}{{ end -}}
+{{- range $p.Params.tags }}{{ $classes = $classes | append (printf "tag-%s" (urlize .)) }}{{ end -}}
+<article id="post-{{ $p.File.ContentBaseName }}" class="{{ delimit $classes " " }}">
+    <header>
+{{- if eq .heading "h1" }}
+        <h1 class="entry-title">
+            <a href="{{ $p.RelPermalink }}" title="{{ $p.Title }}" rel="bookmark">
+                {{ $p.Title }}            </a>
+        </h1>
+{{- else }}
+        <h2 class="entry-title">
+            <a href="{{ $p.RelPermalink }}" title="{{ $p.Title }}" rel="bookmark">
+                {{ $p.Title }}            </a>
+        </h2>
+{{- end }}
+        <p class="entry-meta">
+            Posted on <time datetime="{{ $p.Date.Format site.Params.dateFormat }}">{{ $p.Date.Format site.Params.dateFormat }}</time>
+            by {{ $p.Params.author }}
+                </p>
+    </header>
+{{ $p.Content }}
+<p>{{ with $p.GetTerms "tags" }}Tags: {{ range $i, $t := . }}{{ if $i }}, {{ end }}<a href="{{ $t.RelPermalink }}" rel="tag">{{ $t.Title }}</a>{{ end }}{{ end }}</p></article>

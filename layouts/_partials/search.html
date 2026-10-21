@@ -1,0 +1,35 @@
+{{- /* Search results (search.php), filled in by the browser from /search-index.json. */ -}}
+<div id="page-content">
+	<div id="content-wide">
+		<section id="search-results">
+		</section>
+	</div> <!-- End content-wide -->
+
+{{ partial "sidebar.html" . }}
+
+</div> <!-- End page-content -->
+<script>
+(function () {
+	var q = (new URLSearchParams(location.search).get('s') || '').trim();
+	var out = document.getElementById('search-results');
+	var esc = function (s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; };
+	document.querySelectorAll('.search-field').forEach(function (f) { f.value = q; });
+	fetch({{ "search-index.json" | relURL }}).then(function (r) { return r.json(); }).then(function (items) {
+		var words = q.toLowerCase().split(/\s+/).filter(Boolean);
+		var hit = function (s) { s = s.toLowerCase(); return words.every(function (w) { return s.indexOf(w) >= 0; }); };
+		// Like WordPress: every word must appear; title matches first, then newest.
+		var found = words.length ? items.filter(function (i) { return hit(i.title + ' ' + i.content); }) : [];
+		found.sort(function (a, b) { return (hit(b.title) - hit(a.title)) || (b.date > a.date ? 1 : -1); });
+		var html = '<h1>Search Results for ' + esc(q) + '</h1>';
+		if (!found.length) {
+			html += '\n\t\t\t\t<p>There are no results for your search.</p>';
+		}
+		found.forEach(function (i) {
+			html += '\n\t\t\t\t<h2 class="entry-title">\n\t\t\t\t\t<a href="' + i.url + '" title="' + esc(i.title) + '" rel="bookmark">\n\t\t\t\t\t\t' + esc(i.title) + '\n\t\t\t\t\t</a>\n\t\t\t\t</h2>' +
+				'\n\t\t\t\t<div class="entry-summary" style="border-bottom:1px dotted #ccc;margin-bottom:13px;">\n\t\t\t\t\t<p>' + esc(i.excerpt) + '</p>' +
+				'\n\t\t\t\t\t\t<p><a href="' + i.url + '" title="' + esc(i.title) + '" rel="bookmark">\n\t\t\t\t\t\t\tRead ' + esc(i.title) + '\n\t\t\t\t\t\t</a></p>\n\t\t\t\t\t</div>';
+		});
+		out.innerHTML = html;
+	});
+})();
+</script>

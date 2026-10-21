@@ -1,0 +1,39 @@
+items:
+- title: Home
+  url: /
+- title: 506 Activities
+  url: /2025-activities-service-projects/
+- title: Contact
+  url: /contact-troop-506/
+- title: 506 Parents
+  url: /leaders/
+  children:
+  - title: Email & Account
+    url: /leaders/email-request/
+  - title: Leaders
+    url: /leaders/adult-leadership/
+  - title: Medical
+    url: /leaders/medical-forms/
+  - title: Membership
+    url: /leaders/troop-506-membership/
+  - title: Training
+    url: /leaders/bsa-adult-training-2/
+- title: 506 Scouts
+  url: /scout-resources/
+  children:
+  - title: 2025 Activities
+    url: /2025-activities-service-projects/
+  - title: Merit Badges
+    url: /leaders/merit-badge-counselors/
+  - title: Advancement
+    url: /scout-resources/rank-advancement/
+  - title: SM Conference
+    url: /scout-resources/scoutmaster-conference/
+  - title: Troop 506 Path to Eagle
+    url: /scout-resources/troop-506-path-to-eagle/
+- title: 506 Eagles
+  url: /scouts-honor/
+- title: Chartered Org
+  url: /charter-organization/
+- title: Troopmaster
+  url: http://troopmaster.lajollatroop506.com/

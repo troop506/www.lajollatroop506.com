@@ -1,0 +1,19 @@
+{{ define "main" }}
+{{- if .Params.archive }}
+{{ partial "archive.html" . }}
+{{- else if .Params.search }}
+{{ partial "search.html" . }}
+{{- else }}
+	<div id="page-content">
+		<div id="content-wide">
+			<section>
+						<article id="post-{{ .File.ContentBaseName }}" class="page type-page status-publish hentry">
+						<h1 class="entry-title">{{ .Title }}</h1>
+{{ .Content }}
+						</article>
+			</section>
+		</div> <!-- End content-wide -->
+{{ partial "sidebar.html" . }}
+ 	</div> <!-- End page-content -->
+{{- end }}
+{{ end }}

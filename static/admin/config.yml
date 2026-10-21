@@ -1,0 +1,144 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms@0.230.0/schema/sveltia-cms.json
+# Sveltia CMS for www.lajollatroop506.com. Editors sign in at /admin/ with a
+# GitHub account that has write access to the repository.
+
+backend:
+  name: github
+  repo: troop506/www.lajollatroop506.com
+  branch: master
+
+site_url: https://www.lajollatroop506.com
+display_url: https://www.lajollatroop506.com
+
+# Uploads keep their WordPress URLs; see the module mounts in hugo.toml.
+media_folder: uploads
+public_folder: /wp-content/uploads
+
+collections:
+
+  - name: posts
+    label: Blog Posts
+    label_singular: Blog Post
+    description: >-
+      Trip reports and troop news. New posts start as drafts; turn "Draft" off
+      to publish. The site rebuilds a minute or two after you save.
+    folder: content/posts
+    create: true
+    slug: '{{slug}}'
+    summary: '{{title}} — {{date | date("MMM D, YYYY")}}{{draft | ternary(" (draft)", "")}}'
+    sortable_fields:
+      fields: [date, title]
+      default: { field: date, direction: descending }
+    fields:
+      - { name: title, label: Title }
+      - name: date
+        label: Date
+        widget: datetime
+        default: '{{now}}'
+        format: 'YYYY-MM-DDTHH:mm:ss'
+      - { name: author, label: Author, default: 506 Webmaster }
+      - name: categories
+        label: Categories
+        widget: select
+        multiple: true
+        default: [uncategorized]
+        options:
+          - { label: All Troop 506 News, value: uncategorized }
+          - { label: News, value: news }
+          - { label: Service, value: service }
+      - { name: tags, label: Tags, widget: list, required: false, hint: 'For example 506G, Camping' }
+      - name: image
+        label: Featured photo
+        widget: image
+        required: false
+        hint: Shown with the post on the home page.
+      - { name: image_alt, label: Featured photo description, required: false }
+      - { name: draft, label: Draft (not on the site yet), widget: boolean, default: true }
+      - name: body
+        label: Story
+        widget: richtext
+        editor_components: [image, photo, photo-row, youtube]
+
+  - name: pages
+    label: Pages
+    label_singular: Page
+    folder: content/pages
+    create: true
+    slug: '{{slug}}'
+    summary: '{{title}} — {{url}}'
+    sortable_fields:
+      fields: [title, url]
+      default: { field: url, direction: ascending }
+    fields:
+      - { name: title, label: Title }
+      - { name: date, label: Date, widget: datetime, default: '{{now}}', format: 'YYYY-MM-DDTHH:mm:ss' }
+      - name: url
+        label: Page address
+        hint: 'The path on the site, like /leaders/medical-forms/ . Add it to the menu under Site Settings.'
+        pattern: ['^/([a-z0-9-]+/)+$', 'Start and end with /, lowercase letters, numbers and dashes']
+      - { name: draft, label: Draft (not on the site yet), widget: boolean, default: false, required: false }
+      - name: body
+        label: Content
+        widget: richtext
+        editor_components: [image, photo, photo-row, youtube]
+
+  - name: home
+    label: Home Page
+    files:
+      - name: home
+        label: Home Page
+        file: content/_index.md
+        fields:
+          - { name: title, label: Title }
+          - name: slider
+            label: Photo slider
+            widget: list
+            summary: '{{fields.caption}}'
+            fields:
+              - { name: image, label: Photo, widget: image }
+              - { name: caption, label: Caption, required: false }
+              - { name: alt, label: Description (for screen readers), required: false }
+          - { name: intro, label: Text beside the slider, widget: richtext }
+          - name: latest_posts
+            label: Number of latest posts shown
+            widget: number
+            value_type: int
+            min: 0
+            default: 6
+          - name: body
+            label: Text below the slider
+            widget: richtext
+            editor_components: [image, photo, photo-row, youtube]
+
+  - name: settings
+    label: Site Settings
+    files:
+      - name: menu
+        label: Menu
+        file: data/menu.yaml
+        fields:
+          - name: items
+            label: Menu items
+            widget: list
+            summary: '{{fields.title}} — {{fields.url}}'
+            fields:
+              - { name: title, label: Label }
+              - { name: url, label: Link, hint: 'A page address like /contact-troop-506/ or a full https:// link' }
+              - name: children
+                label: Drop-down items
+                widget: list
+                required: false
+                summary: '{{fields.title}} — {{fields.url}}'
+                fields:
+                  - { name: title, label: Label }
+                  - { name: url, label: Link }
+
+  - name: categories
+    label: Categories
+    label_singular: Category
+    folder: content/categories
+    path: '{{slug}}/_index'
+    create: true
+    fields:
+      - { name: title, label: Name }
+      - { name: slug, label: Address, hint: 'Used in the link /category/<address>/; also add it to the Blog Post categories list in static/admin/config.yml' }

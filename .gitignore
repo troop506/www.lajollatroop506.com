@@ -1,2 +1,6 @@
-.env
-data/
+/public/
+/resources/_gen/
+.hugo_build.lock
+.DS_Store
+# Regenerated from WordPress by migration/export.php
+/migration/export.json

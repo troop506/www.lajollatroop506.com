@@ -1,0 +1,12 @@
+{{- /* An upload scaled down to fit within a box, like WordPress's image sizes.
+     Context: dict "src" "/wp-content/uploads/..." "box" "1024x1024".
+     Returns the resource, or nil if the file is not in uploads/. */ -}}
+{{- $img := resources.Get (strings.TrimPrefix "/" .src) -}}
+{{- if $img -}}
+  {{- $w := int (index (split .box "x") 0) -}}
+  {{- $h := int (index (split .box "x") 1) -}}
+  {{- if and (in (slice "jpeg" "png" "webp" "gif") $img.MediaType.SubType) (or (gt $img.Width $w) (and $h (gt $img.Height $h))) -}}
+    {{- if $h }}{{ $img = $img.Fit .box }}{{ else }}{{ $img = $img.Resize (printf "%dx" $w) }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $img -}}

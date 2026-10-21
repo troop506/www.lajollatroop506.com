@@ -1,0 +1,44 @@
+{{- /* The home page: the "Full Width Page" template with the Kadence row
+     (photo slider + intro), the page text, and the latest-posts grid. */ -}}
+{{ define "main" }}
+	<div id="page-content">
+		<div id="content-full">
+			<section>
+						<article id="post-home" class="page type-page status-publish has-post-thumbnail hentry">
+						<h1 class="entry-title">{{ .Title }}</h1>
+<div class="kb-row-layout-wrap kb-row-layout-id468_f8ac30-7d alignnone wp-block-kadence-rowlayout"><div class="kt-row-column-wrap kt-has-2-columns kt-row-layout-left-golden kt-tab-layout-inherit kt-mobile-layout-row kt-row-valign-top">
+<div class="wp-block-kadence-column kadence-column468_cb0bda-1d inner-column-1"><div class="kt-inside-inner-col">
+<div class="wp-block-columns is-layout-flex wp-container-core-columns-is-layout-9d6595d7 wp-block-columns-is-layout-flex">
+<div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow" style="flex-basis:100%"><div class="kb-gallery-wrap-id-468_59ade7-45 alignnone wp-block-kadence-advancedgallery"><div class="kb-gallery-ul kb-gallery-non-static kb-gallery-type-slider kb-gallery-id-468_59ade7-45 kb-gallery-caption-style-below kb-gallery-filter-none" data-image-filter="none" data-lightbox-caption="true"><div class="kt-blocks-carousel splide kt-carousel-container-dotstyle-none kt-carousel-arrowstyle-whiteondark kt-carousel-dotstyle-none kb-slider-group-arrow kb-slider-arrow-position-center" data-show-pause-button="false" data-slider-anim-speed="1000" data-slider-arrows="true" data-slider-auto="1" data-slider-dots="false" data-slider-fade="true" data-slider-hover-pause="false" data-slider-scroll="1" data-slider-speed="2000" data-slider-type="slider"><div class="splide__track"><ul class="kt-blocks-carousel-init kb-blocks-slider splide__list">
+{{- range $i, $s := .Params.slider -}}
+{{- $full := resources.Get (strings.TrimPrefix "/" $s.image) -}}
+{{- $img := partial "resized.html" (dict "src" $s.image "box" "1024x1024") -}}
+{{- if $img -}}
+<li class="kb-slide-item kb-gallery-slide-item splide__slide"><div class="kadence-blocks-gallery-item"><div class="kadence-blocks-gallery-item-inner"><figure class="kb-gallery-figure{{ with $s.caption }} kadence-blocks-gallery-item-has-caption{{ end }}"><div class="kb-gal-image-radius"><div class="kb-gallery-image-contain kadence-blocks-gallery-intrinsic kb-gallery-image-ratio-square kb-has-image-ratio-square"><img alt="{{ $s.alt }}" class="skip-lazy" data-full-image="{{ $full.RelPermalink }}" data-light-image="{{ $full.RelPermalink }}" decoding="async"{{ if eq $i 0 }} fetchpriority="high"{{ end }} height="{{ $img.Height }}" src="{{ $img.RelPermalink }}" width="{{ $img.Width }}"/></div></div>{{ with $s.caption }}<figcaption class="kadence-blocks-gallery-item__caption">{{ . }}</figcaption>{{ end }}</figure></div></div></li>
+{{- end -}}
+{{- end -}}
+</ul></div></div></div></div></div>
+</div>
+</div></div>
+<div class="wp-block-kadence-column kadence-column468_22b133-53 inner-column-2"><div class="kt-inside-inner-col">
+{{ .RenderString (dict "display" "block") .Params.intro }}
+</div></div>
+</div></div>
+{{ .Content }}
+<ul class="wp-block-kadence-posts kb-posts kadence-posts-list kb-posts-id-468_fe3732-87 content-wrap grid-cols kb-posts-style-boxed grid-sm-col-2 grid-lg-col-3 item-image-style-above">
+{{- range first (.Params.latest_posts | default 6) (where site.RegularPages "Section" "posts").ByDate.Reverse }}
+{{ partial "post-card.html" . }}
+{{- end }}
+</ul> </article>
+			</section>
+		</div> <!-- End content-wide -->
+ 	</div> <!-- End page-content -->
+{{ end }}
+
+{{ define "scripts" }}
+<script src="{{ "wp-content/plugins/kadence-blocks/includes/assets/js/splide.min.js" | relURL }}"></script>
+<script>
+var kb_splide = {"i18n":{"prev":"Previous slide","next":"Next slide","first":"Go to first slide","last":"Go to last slide","slideX":"Go to slide %s","pageX":"Go to page %s","play":"Start autoplay","pause":"Pause autoplay","carousel":"carousel","slide":"slide","select":"Select a slide to show","slideLabel":"%s of %s"}};
+</script>
+<script src="{{ "wp-content/plugins/kadence-blocks/includes/assets/js/kb-splide-init.min.js" | relURL }}"></script>
+{{ end }}

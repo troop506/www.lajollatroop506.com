@@ -1,0 +1,32 @@
+{{- /* An image block, in WordPress's markup.
+  {{< image src="/wp-content/uploads/x.jpg" alt="" caption="" align="center|left|right"
+      resized="285" size="full" link="" width="" height="" kind="uagb" block="" wrapper="plain|default" >}}
+  Only src is required. kind="uagb" (with its block id) reproduces a Spectra image block;
+  wrapper reproduces the older <div class="wp-block-image"> markup.
+  Inside {{< photo-row >}} each image is wrapped in its own column. */ -}}
+{{- $src := .Get "src" -}}
+{{- $res := "" -}}
+{{- if hasPrefix $src "/" }}{{ $res = resources.Get (strings.TrimPrefix "/" $src) }}{{ else }}{{ $res = .Page.Resources.Get $src }}{{ end -}}
+{{- $url := cond (hasPrefix $src "/") (relURL (strings.TrimPrefix "/" $src)) $src -}}
+{{- with $res }}{{ $url = .RelPermalink }}{{ end -}}
+{{- $w := .Get "width" -}}
+{{- $h := .Get "height" -}}
+{{- if and $res (not $w) (in (slice "jpeg" "png" "webp" "gif") $res.MediaType.SubType) }}{{ $w = $res.Width }}{{ $h = $res.Height }}{{ end -}}
+{{- $align := .Get "align" -}}
+{{- $resized := .Get "resized" -}}
+{{- $style := "" -}}
+{{- with $resized }}{{ $style = printf "width:%spx;height:auto" . }}{{ end -}}
+{{- $img := printf `<img src="%s" alt="%s"%s%s%s/>` $url (.Get "alt") (cond (ne (string $w) "") (printf ` width="%v"` $w) "") (cond (ne (string $h) "") (printf ` height="%v"` $h) "") (cond (ne $style "") (printf ` style="%s"` $style) "") -}}
+{{- with .Get "link" }}{{ $img = printf `<a href="%s">%s</a>` (cond (hasPrefix . "/") (relURL (strings.TrimPrefix "/" .)) .) $img }}{{ end -}}
+{{- $caption := .Get "caption" -}}
+{{- $inRow := and .Parent (eq .Parent.Name "photo-row") -}}
+{{- if $inRow }}<div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">{{ end -}}
+{{- if eq (.Get "kind") "uagb" -}}
+<div class="wp-block-uagb-image{{ with .Get "block" }} uagb-block-{{ . }}{{ end }} wp-block-uagb-image--layout-default wp-block-uagb-image--effect-static wp-block-uagb-image--align-{{ $align | default "none" }}"><figure class="wp-block-uagb-image__figure">{{ $img | safeHTML }}{{ with $caption }}<figcaption class="uagb-image-caption">{{ . | markdownify }}</figcaption>{{ end }}</figure></div>
+{{- else if .Get "wrapper" -}}
+<div class="wp-block-image{{ if eq (.Get "wrapper") "default" }} is-style-default{{ end }}">
+<figure class="{{ with $align }}align{{ . }} {{ end }}size-{{ .Get "size" | default "large" }}{{ with $resized }} is-resized{{ end }}">{{ $img | safeHTML }}{{ with $caption }}<figcaption class="wp-element-caption">{{ . | markdownify }}</figcaption>{{ end }}</figure></div>
+{{- else -}}
+<figure class="wp-block-image{{ with $align }} align{{ . }}{{ end }} size-{{ .Get "size" | default "large" }}{{ with $resized }} is-resized{{ end }}">{{ $img | safeHTML }}{{ with $caption }}<figcaption class="wp-element-caption">{{ . | markdownify }}</figcaption>{{ end }}</figure>
+{{- end -}}
+{{- if $inRow }}</div>{{ end -}}

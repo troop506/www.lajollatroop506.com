@@ -1,0 +1,9 @@
+{{- /* Photos side by side, one per column:
+  {{< photo-row >}}
+  {{< image src="/wp-content/uploads/a.jpg" >}}
+  {{< image src="/wp-content/uploads/b.jpg" >}}
+  {{< /photo-row >}}
+  Each image wraps itself in a column (see image.html). */ -}}
+<div class="wp-block-columns is-layout-flex wp-container-core-columns-is-layout-9d6595d7 wp-block-columns-is-layout-flex">
+{{ .Inner | strings.TrimSpace | safeHTML }}
+</div>

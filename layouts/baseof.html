@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<html lang="en-US">
+
+<head>
+{{ partial "head.html" . }}
+</head>
+
+<body>
+
+<p class="skip"><a accesskey="C" href="#wrapper">Skip to content</a>. <a accesskey="N" href="#main-navigation">Skip to main navigation</a>.</p>
+
+{{ partial "header.html" . }}
+<div id="wrapper">
+{{ block "main" . }}{{ end }}
+{{ partial "footer.html" . }}
+</div>
+
+<script>
+	jQuery(document).ready(function($){
+		jQuery(".flexnav").flexNav({ 'animationSpeed' : 50, 'calcItemWidths': true, 'hoverIntent': true, 'hoverIntentTimeout': 25, 'hover': true });
+	});
+</script>
+{{ block "scripts" . }}{{ end }}
+</body>
+</html>

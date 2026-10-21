@@ -1,0 +1,19 @@
+{{- /* Category and tag archives (archive.php): the newest posts, no paging. */ -}}
+{{ define "main" }}
+	<div id="page-content">
+		<div id="content-wide">
+
+				<h1 class="page-title">
+				{{ if eq .Data.Plural "tags" }}Tag: {{ else }}Category: {{ end }}{{ .Title }}
+				</h1>
+
+{{ range first site.Params.postsPerPage .Pages.ByDate.Reverse }}
+{{ partial "entry.html" (dict "page" . "heading" "h2") }}
+{{ end }}
+
+		</div> <!-- End content-wide -->
+
+{{ partial "sidebar.html" . }}
+
+ 	</div> <!-- End page-content -->
+{{ end }}

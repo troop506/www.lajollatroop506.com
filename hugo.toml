@@ -1,0 +1,67 @@
+# Troop 506 La Jolla — www.lajollatroop506.com
+# A Hugo copy of the former WordPress site, edited with Sveltia CMS (/admin/).
+
+baseURL = "https://www.lajollatroop506.com/"
+title = "Troop 506B & Troop 506G | La Jolla, CA"
+languageCode = "en-US"
+timeZone = "America/Los_Angeles"
+enableRobotsTXT = true
+disableKinds = ["taxonomy"]
+
+[params]
+  description = "Prepared for High Adventure"
+  # Settings the WordPress site used for lists and feeds.
+  postsPerPage = 10
+  dateFormat = "January 2, 2006"
+
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+
+# Same URLs as WordPress.
+[permalinks.page]
+  posts = "/:year/:month/:contentbasename/"
+[permalinks.term]
+  categories = "/category/:slug/"
+  tags = "/tag/:slug/"
+
+[pagination]
+  pagerSize = 10
+
+[outputs]
+  home = ["html", "feed", "searchindex"]
+  section = ["html"]
+  term = ["html"]
+
+[outputFormats.feed]
+  mediaType = "application/rss+xml"
+  baseName = "index"
+  path = "feed"
+  isPlainText = false
+  rel = "alternate"
+[outputFormats.searchindex]
+  mediaType = "application/json"
+  baseName = "search-index"
+  isPlainText = true
+  notAlternative = true
+
+[markup.goldmark.renderer]
+  unsafe = true      # content keeps some WordPress HTML
+  hardWraps = true   # Sveltia saves line breaks as single newlines
+[markup.goldmark.parser]
+  wrapStandAloneImageWithinParagraph = false
+
+# Uploads are both published as-is (old /wp-content/uploads/ URLs keep
+# working) and available to Hugo for resizing.
+[[module.mounts]]
+  source = "static"
+  target = "static"
+[[module.mounts]]
+  source = "uploads"
+  target = "static/wp-content/uploads"
+[[module.mounts]]
+  source = "uploads"
+  target = "assets/wp-content/uploads"
+[[module.mounts]]
+  source = "assets"
+  target = "assets"

@@ -1,0 +1,10 @@
+{{- $items := slice -}}
+{{- range where site.RegularPages "Params.archive" "!=" true -}}
+  {{- if in (slice "posts" "pages") .Section -}}
+    {{- $words := findRE `\S+` .Plain -}}
+    {{- $excerpt := delimit (first 55 $words) " " -}}
+    {{- if gt (len $words) 55 }}{{ $excerpt = printf "%s […]" $excerpt }}{{ end -}}
+    {{- $items = $items | append (dict "title" .Title "url" .RelPermalink "date" (.Date.Format "2006-01-02T15:04:05") "excerpt" $excerpt "content" .Plain) -}}
+  {{- end -}}
+{{- end -}}
+{{- $items | jsonify -}}
