@@ -4,3 +4,7 @@
 .DS_Store
 # Regenerated from WordPress by migration/export.php
 /migration/export.json
+# dotconfig — assembled env files contain decrypted secrets
+.env
+.env.*
+!.env.example
