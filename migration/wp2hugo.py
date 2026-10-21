@@ -303,7 +303,7 @@ def main(export, uploads_dir):
             if not front['tags']:
                 del front['tags']
             slug = item['slug'] or re.sub(r'[^a-z0-9]+', '-', front['title'].lower()).strip('-')
-            write(ROOT / f'content/posts/{slug}.md', front, convert(item['content'], where))
+            write(ROOT / f'content/posts/{item["date"][:10]}-{slug}.md', front, convert(item['content'], where))
 
     # Taxonomy term pages carry the WordPress display names.
     for (tax, slug), t in terms.items():

@@ -20,10 +20,17 @@ disableKinds = ["taxonomy"]
 
 # Same URLs as WordPress.
 [permalinks.page]
-  posts = "/:year/:month/:contentbasename/"
+  posts = "/:year/:month/:slug/"
 [permalinks.term]
   categories = "/category/:slug/"
   tags = "/tag/:slug/"
+
+# Post files are named YYYY-MM-DD-slug.md. Reading publishDate from the file
+# name makes Hugo take the slug from the rest of it; date (with its time)
+# still comes from front matter.
+[frontmatter]
+  date = ["date", ":default"]
+  publishDate = [":filename", "publishDate", "date", ":default"]
 
 [pagination]
   pagerSize = 10

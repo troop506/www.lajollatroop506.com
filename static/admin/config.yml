@@ -26,7 +26,8 @@ collections:
       to publish. The site rebuilds a minute or two after you save.
     folder: content/posts
     create: true
-    slug: '{{slug}}'
+    # File name YYYY-MM-DD-slug.md; the URL is /YYYY/MM/slug/.
+    slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
     summary: '{{title}} — {{date | date("MMM D, YYYY")}}{{draft | ternary(" (draft)", "")}}'
     sortable_fields:
       fields: [date, title]
