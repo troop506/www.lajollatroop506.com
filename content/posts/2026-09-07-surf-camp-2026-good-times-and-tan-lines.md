@@ -8,7 +8,7 @@ categories:
 tags: []
 image: /wp-content/uploads/2026/09/image.jpeg
 image_alt: Troop 506 poses at Surf Camp.
-draft: true
+draft: false
 ---
 
 ![](/wp-content/uploads/2026/09/image-1024x768.jpeg)
