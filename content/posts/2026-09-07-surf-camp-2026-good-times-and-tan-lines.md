@@ -1,12 +1,14 @@
 ---
 title: Surf Camp 2026 — Good Times and Tan Lines
-date: '2026-09-07T06:56:27'
+date: 2026-09-07T06:56:00
 author: 506 Webmaster
 categories:
-- uncategorized
-- news
+  - uncategorized
+  - news
+tags: []
 image: /wp-content/uploads/2026/09/image.jpeg
 image_alt: Troop 506 poses at Surf Camp.
+draft: true
 ---
 
 ![](/wp-content/uploads/2026/09/image-1024x768.jpeg)
@@ -15,9 +17,9 @@ By Beatrice, Webmaster Troop 506G
 
 On Friday August 28th Troop 506 embarked on a weekend campout at Cardiff State beach. The waves were firing and the scouts were ready to spend a weekend relaxing in the ocean.
 
-Surf camp is not a traditional campout offered for the troop because it requires no cooking and no cleaning, just good vibes, scouts from 506 have been attending surf camp for decades. Activities to do at surf camp vary, you can spend the whole day in the water swimming, boogie boarding or surfing. You can relax on the beach tanning or with a good book. It’s even open to non-swimmers, you can spend the whole day up at camp getting sign offs or chatting with friends.
+Surf camp is not a traditional campout offered for the troop because it requires no cooking and no cleaning, just good vibes, scouts from 506 have been attending surf camp for decades. Activities to do at surf camp vary, you can spend the whole day in the water swimming, boogie boarding or surfing. You can relax on the beach tanning or with a good book.
 
-Like mentioned earlier, surf camp is a great place to work on rank advancement. The long unstructured days are a perfect frame work for getting through sign offs, learning skills and even scoutmaster conferences. Surf camp is also a great opportunity for scouts to bond, it caters to a wide range of ages from both the B and G side which makes a great space to make new friends.
+Like mentioned earlier, surf camp is a great place to work on rank advancement. The long unstructured days are a perfect frame work for getting through sign offs and learning skills. Surf camp is also a great opportunity for scouts to bond, it caters to a wide range of ages from both the B and G side which makes a great space to make new friends.
 
 The scouts loved the event this year, star scout Zach from troop 506b recalls, “I had a great time out in the water, the waves were fun, I wish I had brought a wetsuit so I could have been out there all day”.
 
